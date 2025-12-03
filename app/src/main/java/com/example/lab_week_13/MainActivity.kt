@@ -11,10 +11,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.example.lab_week_13.databinding.ActivityMainBinding
 import com.example.lab_week_13.model.Movie
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,6 +51,21 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         )[MovieViewModel::class.java]
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val workRequest = PeriodicWorkRequest
+            .Builder(
+                MovieWorker::class.java, 1,
+                TimeUnit.HOURS
+            ).setConstraints(constraints)
+            .addTag("movie-work").build()
+
+        WorkManager.getInstance(
+            applicationContext
+        ).enqueue(workRequest)
 
         binding.viewModel = movieViewModel
         binding.lifecycleOwner = this
