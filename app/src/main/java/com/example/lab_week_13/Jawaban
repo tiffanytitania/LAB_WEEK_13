@@ -1,0 +1,31 @@
+1. Why is MVVM important? Which files represent Model, which files represent
+View, and which files represent ViewModel?
+MVVM penting karena
+- memisahkan logika UI dengan logika business/data
+- UI jadi tidak terlalu kompleks karena logikanya dihandle viewModel
+- bekerja dengan iveData/StateFlow jadi UI otomatis terupdate ketika ada perubahan data
+
+Model       : Movie.kt, MovieDao.kt, MovieDatabase.kt, network API service
+View        : activity_main.xml, MainActivity.kt, fragment layouts
+ViewModel   : MovieViewModel.kt, MovieViewModelFactory.kt
+
+2. In Part 1, you implemented Data Binding, why is this more efficient than using
+the normal method?
+- less boilerplate
+- UI terupdate otomatis
+- arsitektur yang lebih reactive
+
+3. In Part 2, you implemented the Singleton Pattern, why is this important?
+penting di android karena:
+- database, repository, API client hanya boleh ada 1
+- saves memory dan dupplicate yang ga sengaja
+- memastikan a akses yang konsisten dan predictable
+
+4. In Part 2 & 3, you implemented the Repository Pattern, why is this important?
+- memisahkah logika UI dengan logika data
+- ViewModel tidak perduli sumber data karena cukup memanggil dari repository
+- menghindarii duplikasi kode
+
+5. In part 3, you implemented the Worker Manager, is there another way to refresh
+your database with the latest data other than using Worker?
+Bisa menggunakan Coroutine + ViewModel (Manual Refresh Button). Membuat tombol refresh yang ketika ditekan, ViewModel akan memanggil repository.fetchMoviesFromNetwork().
