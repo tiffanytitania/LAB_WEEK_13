@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.test_lab_week_12"
+    namespace = "com.example.lab_week_13"
     compileSdk = 36
 
     defaultConfig {
@@ -27,6 +27,11 @@ android {
             )
         }
     }
+
+    buildFeatures{
+        dataBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

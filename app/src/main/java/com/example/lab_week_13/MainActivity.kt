@@ -1,9 +1,9 @@
-package com.example.test_lab_week_12
+package com.example.lab_week_13
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -11,7 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.test_lab_week_12.model.Movie
+import com.example.lab_week_13.databinding.ActivityMainBinding
+import com.example.lab_week_13.model.Movie
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -27,9 +28,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding: ActivityMainBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        val recyclerView: RecyclerView = findViewById(R.id.movie_list)
+        val recyclerView = binding.movieList
+
         recyclerView.adapter = movieAdapter
         recyclerView.layoutManager = GridLayoutManager(this, 2)
 
@@ -44,30 +47,8 @@ class MainActivity : AppCompatActivity() {
             }
         )[MovieViewModel::class.java]
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                // Collect movies
-                launch {
-                    movieViewModel.popularMovies.collect { movies ->
-                        movieAdapter.addMovies(movies)
-                    }
-                }
-
-                // Collect errors
-                launch {
-                    movieViewModel.error.collect { error ->
-                        if (error.isNotEmpty()) {
-                            Snackbar.make(
-                                recyclerView,
-                                error,
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                }
-            }
-        }
+        binding.viewModel = movieViewModel
+        binding.lifecycleOwner = this
     }
 
     private fun openMovieDetails(movie: Movie) {
